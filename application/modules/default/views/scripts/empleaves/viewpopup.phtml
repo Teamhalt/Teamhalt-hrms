@@ -1,0 +1,35 @@
+<?php 
+
+?>
+
+<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		?>
+<?php 
+$leave_limit = $this->form->leave_limit->getValue();
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Leave Limit',(!empty($leave_limit))?$this->form->leave_limit->getValue():"...",'Year',(!empty($this->data['alloted_year']))?$this->data['alloted_year']:"...");
+sapp_Helper::viewFooter();
+?>
+			<div class="clearall usedleaves">
+				Used Leaves : <?php echo $this->form->used_leaves->getValue() ;?>
+			</div>
+			
+			<div class="clearall leavenames">
+				<?php 
+					if(!empty($this->leaveTypeCount))
+					{
+						 foreach($this->leaveTypeCount as $key => $leave)
+						 {?>
+						 <?php echo $leave['leavetype']?> <b>:</b> <?php echo $leave['count'];?>
+						 <?php if(sizeof($this->leaveTypeCount) != $key+1){?>,<?php }?>
+			   <?php 	 }
+					}
+				?>
+			</div>
+
+        <div class="new-form-ui-submit" id="formSubmit">
+         <input onclick="closeiframepopup('empleaves','cancel');" type="button" value="Close"  />
+       		
+
+</div>

@@ -1,0 +1,52 @@
+<?php 
+
+
+if($this->ermsg == '')  
+{
+?>
+    <div class="requisitions-block  feedforwardinit_view">
+        <div class="cofig_title" style="margin-left: 0px;padding-top: 0px;">Initialization Details
+                <div class="new-form-ui-submit "  style="margin-top: 0px; float: right; width: auto; margin-left: 0px; ">
+				<!--<div class="back-to-page" style="position: relative; float: right; top: 0px;">
+                    <input type="button" class="fltright" onclick="window.location.href='<?php //echo BASE_URL; ?>feedforwardinit';" value="Back" />
+					</div>-->
+                    <?php if($this->data['status'] == 'Open'){
+                    	
+						$msgtitle = $this->controllername.'_delete';
+						sapp_Helper::editdeleteForView(INITIALIZE_FEEDFORWARD,$this->controllername,$this->id,$msgtitle); ?>
+                    <?php }?>        
+                </div>
+            </div>
+<?php 
+$empCount=$this->empsCount['total'].' Employees';
+$empCountCompleted=$this->empsCount['completed'].' Employees';
+$duedate=sapp_Global::change_date($this->data['ff_due_date'],'view');
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Business Unit ',(!empty($this->data['unitname']))?$this->data['unitname']:"...",'Department',(!empty($this->data['deptname']))?$this->data['deptname']:"...");
+sapp_Helper::viewBody('nor','Mode',(!empty($this->data['ff_mode']))?$this->data['ff_mode']:"...",'From Year',(!empty($this->data['ff_from_year']))?$this->data['ff_from_year']:"...");
+sapp_Helper::viewBody('alt','To Year ',(!empty($this->data['ff_to_year']))?$this->data['ff_to_year']:"...",'Period ',(!empty($this->data['ff_period']))?$this->data['ff_period']:"...");
+sapp_Helper::viewBody('nor','Enabled To',(isset($this->data['enable_to']))?$this->data['enable_to']:"...",'Due Date',(!empty($duedate))?$duedate:"..."); 
+if($this->data['initialize_status'] == 1) {
+sapp_Helper::viewBody('alt','Initialized To  ',(!empty($empCount))?$empCount:"...",'Completed',(!empty($empCountCompleted))?$empCountCompleted:"...");
+}
+sapp_Helper::viewBody('nor','Employee Details',(!empty($this->data['employee_name_view']))?$this->data['employee_name_view']:"...",'Process Status',(!empty($this->data['ff_process_status']))?$this->data['ff_process_status']:"...");
+sapp_Helper::viewBody('alt','Appraisal Status',(!empty($this->data['status']))?$this->data['status']:"...",'','');
+sapp_Helper::viewFooter();
+?>
+  <?php echo sapp_PerformanceHelper::ff_questions_privileges_view($this->getQuestions, $this->check_array);?>
+        
+    </div>
+
+<?php }
+else
+{
+?>
+<div class="ml-alert-1-info m1-info-set-2">
+    <div class="style-1-icon info"></div>
+       No data found.
+</div>
+<?php     
+}
+?>
+<div class="clear"></div>
+</div><!-- end of steps -->

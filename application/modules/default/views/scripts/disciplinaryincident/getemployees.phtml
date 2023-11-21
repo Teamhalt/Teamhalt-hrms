@@ -1,0 +1,25 @@
+<?php 
+
+?>
+
+<?php 
+$options_data = "";	
+$options_data .= sapp_Global::selectOptionBuilder('', 'Select An Employee');
+if($this->flag == 'true')
+{
+    if(count($this->employee_data) >0)
+    {
+        foreach ($this->employee_data as $data) 
+        {                
+            $options_data .= sapp_Global::selectOptionBuilder($data['user_id'],ucwords(utf8_encode($data['userfullname'])),$data['profileimg'],$data['jobtitle_id'],$data['jobtitle_name'],$data['employeeId'],$data['reporting_manager'],$data['reporting_manager_name']);
+        }
+    }        
+    echo $options_data;
+}
+else
+{
+    echo "noemployees.";
+}
+
+?> 
+ 

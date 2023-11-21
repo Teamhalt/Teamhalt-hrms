@@ -1,0 +1,50 @@
+<?php
+
+?>
+<?php 
+
+if($this->nodata != '')
+{
+?>
+<div class="ml-alert-1-info m1-info-set-2">
+    <div class="style-1-icon info"></div>
+       No data found.
+</div>
+<?php 
+}
+else 
+{
+$data = $this->data;
+$id = $this->id;
+$previ_data = $this->previ_data;
+
+?>
+<?php 
+if($this->ermsg == '')  { ?>
+
+   <?php
+    if($previ_data == 'Yes')
+    {
+    ?>
+	<div class="new-form-ui-submit "  style="margin-top: 0px; float: right; width: auto; margin-left: 0px; ">
+
+		<?php if($data['isused'] == 0) {
+			
+		$msgtitle = $this->controllername.'_delete';
+		sapp_Helper::editdeleteForView(EXIT_PROC_TYPES,$this->controllername,$this->id,$msgtitle); 
+		} ?>
+	</div>
+    <?php 
+    }
+    ?>
+
+   <?php 
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Exit Type ',(!empty($this->data['exit_type']))?$this->data['exit_type']:"...",'Description',(!empty($this->data['description']))?$this->data['description']:"...");
+sapp_Helper::viewFooter();
+?>
+   
+ 
+   </div>
+
+<?php } }?>

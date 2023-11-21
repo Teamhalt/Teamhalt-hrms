@@ -1,0 +1,66 @@
+
+<?php 
+$baseUrl = $this->serverUrl().$this->baseUrl();
+$assetuserlogdata = $this->assetuserlogdata;
+//echo "<pre>";print_r($assetuserlogdata);di
+?>
+<?php 	
+if($this->ermsg !='')
+{
+?>
+     <div class="ml-alert-1-info m1-info-set">
+				<div class="style-1-icon info"></div>
+				No data found.
+	</div>
+<?php 
+}else{
+?>
+<div class="total-form-controller view-form-detail newtablegrid details_data_display_block ">
+		
+		<div style="margin-left: 0px; padding-top: 0px; padding-bottom: 20px;  float: none;" class="cofig_title">User Assets
+			<div style="margin-top: 0px; float: right; width: auto;" class="new-form-ui-submit ">
+				
+				
+			</div>
+		 </div>
+		
+  
+    <table width="20%" cellspacing="0" cellpadding="0" border="0" class="grid">
+      <?php 
+		 if(count($this->assetuserlogdata) > 0){
+		 	$i = 0;
+		 	?>   
+       <thead>
+       	<tr>
+       	<th align="center" >Allocated User</th>
+         <th align="center" >Asset Name</th>
+         <th align="center" >Assigned Date</th>
+       </tr>
+       </thead>
+        <tbody>
+         <?php 
+		 	foreach($this->assetuserlogdata as $asset_user_log){
+    	  ?>
+    	  <tr class="row1">
+    	  <td align="right" ><?php echo $asset_user_log['userfullname'];?></td>
+          <td align="right" ><?php echo $asset_user_log['name'];?></td>
+		  <td align="right" ><?php echo sapp_Global::change_date($asset_user_log['created'],'assetuserlog');?></td>
+		  
+		  
+        </tr>
+         <?php }?> 
+		 <?php 
+		 $i++;
+ 		}	
+ 		?>
+         
+      </tbody>
+  </table>
+			
+	</div>        
+  <?php }?>    
+      
+      
+     
+				
+ 

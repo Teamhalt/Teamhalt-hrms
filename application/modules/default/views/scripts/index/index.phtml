@@ -1,0 +1,229 @@
+<form id='idfrm' action="<?php echo BASE_URL; ?>index/loginpopupsave" method="post">
+    <div>
+        <h1>Log in</h1>
+    </div>
+    <div class="fltleft fullwidth">
+        <div class="login-fields" tabindex="0">
+            <label>User Name</label>
+            <input type="text" class="required" name="username" id="username" maxlength="50"
+                placeholder="Enter your username or email" tabindex="1" />
+            <div class="errorMsg" style="display:none" id="usernameerror"></div>
+        </div>
+        <div class="login-fields">
+            <label>Password</label>
+            <input type="password" class="required" name="password" id="password" maxlength="15"
+                onkeydown="return keycodeforIE(event)" placeholder="Enter your password" tabindex="2" />
+
+            <?php if (count($this->messages)) { ?>
+                <div class="errorMsg" id="usernameerror">
+
+                    <?php foreach ($this->messages as $message) {
+                        echo $this->escape($message);
+                    }
+                    ?>
+                </div>
+            <?php } else { ?>
+                <div class="errorMsg" style="display:none" id="pwderror"></div>
+            <?php } ?>
+        </div>
+
+        <div class="login-button">
+            <input type="submit" value="Log In" id="loginsubmit" tabindex="-1">
+        </div>
+        <div class="forgotpassword"><a id="forgotpwdtext">Forgot Password?</a></div>
+    </div>
+</form>
+
+
+<form action="" method="post" id="forgotPasswordForm">
+    <div class="forgot-line" id="forgotpassworddiv" style="display:none;">
+        <div class="login-fields">
+            <input type="text" class="email-status" placeholder="Enter your phone number" id="contactnumber"
+                name="contactnumber" />
+            <div id="forgot_error_message" class="errorMsg" style="display:none;"></div>
+            <div id="forgot_succ_message" class="succMsg" style="display:none;"></div>
+        </div>
+        <div class="login-button">
+            <input type="submit" name="submit" id="forgotpwdbutton" value="Send password" />
+        </div>
+    </div>
+</form>
+
+
+<?php
+function is_valid_phone_number($number)
+{
+    if (empty($number) || !preg_match('/^\d{10}$/', $number)) {
+        return false;
+    }
+    return true;
+}
+function contactNumberExists($phoneNumber)
+{
+    $dbHost = 'localhost';
+    $dbUser = 'root';
+    $dbPassword = '';
+    $dbName = 'teamhalthrmsdata';
+
+    $conn = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $checkSql = "SELECT * FROM main_users WHERE contactnumber='$phoneNumber'";
+    $result = $conn->query($checkSql);
+
+    if ($result === FALSE) {
+        echo "Error checking phone number: " . $conn->error;
+        return false;
+    } else {
+        return $result->num_rows > 0;
+    }
+
+    $conn->close();
+}
+function sendSMS($user, $password, $senderId, $number, $message)
+{
+    $apiUrl = 'http://182.18.182.41/api/mt/SendSMS';
+    $url = $apiUrl . '?user=' . $user . '&password=' . $password . '&senderid=' . $senderId . '&channel=Trans&DCS=0&flashsms=0&number=' . $number . '&text=' . urlencode($message) . '&route=62&DLTTemplateid=1007164490751498474&PEID=1001611480000070909';
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    )
+    );
+    $response = curl_exec($curl);
+    if ($response === false) {
+        return 'Curl error: ' . curl_error($curl);
+    }
+    curl_close($curl);
+    return json_decode($response, true);
+}
+
+function updateOTPToDatabase($phoneNumber, $otp)
+{
+    $dbHost = 'localhost';
+    $dbUser = 'root';
+    $dbPassword = '';
+    $dbName = 'teamhalthrmsdata';
+
+    $conn = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    // Check if the phone number already exists in the database
+    $checkSql = "SELECT * FROM main_users WHERE contactnumber='$phoneNumber'";
+    $result = $conn->query($checkSql);
+
+    if ($result === FALSE) {
+        echo "Error checking phone number: " . $conn->error;
+    } else {
+        if ($result->num_rows > 0) {
+            $hashedOTP = md5($otp);
+
+            $updateSql = "UPDATE main_users SET emppassword='$hashedOTP' WHERE contactnumber='$phoneNumber'";
+            if ($conn->query($updateSql) === TRUE) {
+            } else {
+                echo "Error updating encrypted OTP: " . $conn->error;
+            }
+        } else {
+            // echo "Error: Phone number not found in the database. Encrypted OTP not updated.";
+        }
+    }
+
+    $conn->close();
+}
+
+function generateOTP()
+{
+    // Generate a random string of characters (in this case, 12 characters)
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+    $otp = '';
+    $length = 9;
+
+    for ($i = 0; $i < $length; $i++) {
+        $otp .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    return $otp;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user = 'SM-TmHlt09';
+    $password = 'SM@TmHlt';
+    $senderId = 'FLYFOX';
+    $number = $_POST['contactnumber'];
+    $otp = generateOTP(); // Generate OTP only once
+
+    $message = 'Flyfox never calls asking for your OTP. Do not share it with anyone to save yourself from fraud! OTP initiated by you for Instarupay login is ' . $otp . '.';
+
+    // Validate phone number
+    if (!is_valid_phone_number($number)) {
+        echo '<p>Error: Please enter a valid phone number.</p>';
+    } else {
+        // Check if the contact number exists in the database
+        if (contactNumberExists($number)) {
+            // Send SMS
+            $response = sendSMS($user, $password, $senderId, $number, $message);
+
+            if (!empty($response) && isset($response['ErrorCode']) && $response['ErrorCode'] == '000') {
+                updateOTPToDatabase($number, $otp);
+                echo '<p style="margin-left: 66px; color: #14A44D; margin-top: 234px;font-size: 1pc">SMS sent successfully!</p>';
+            } else {
+                echo '<p>Error: Unable to send SMS.</p>';
+            }
+        } else {
+            echo '<p style="color:#DC4C64; margin-top:14rem;font-size:14px;">the number does not match with the registered number.</p>';
+        }
+    }
+}
+?>
+
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        <?php if (count($this->messages)) { ?>
+            $('#loginpopdiv').show();
+            $("#hometab").removeClass("active");
+            $("#loginbutton").addClass("active");
+        <?php } ?>
+
+    });
+
+
+    $('#emailaddress').keydown(function (e) {
+
+        var code = e.keyCode || e.which;
+        if (code == 13) { //Enter keycode
+            sendPassword();
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Validate phone number using jQuery
+        $('#forgotPasswordForm').submit(function (e) {
+            var phoneNumber = $('#contactnumber').val();
+            if (phoneNumber === '') {
+                e.preventDefault(); // Prevent form submission
+                $('#forgot_error_message').text('Please enter a phone number.').show();
+            } else if (!(/^\d{10}$/.test(phoneNumber))) {
+                e.preventDefault(); // Prevent form submission
+                $('#forgot_error_message').text('Please enter a valid 10-digit phone number.').show();
+            } else {
+                $('#forgot_error_message').hide();
+            }
+        });
+    });
+</script>

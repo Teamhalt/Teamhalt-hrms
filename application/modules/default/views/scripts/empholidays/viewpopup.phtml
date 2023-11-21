@@ -1,0 +1,17 @@
+<?php 
+
+?>
+
+<?php echo $this->form->id; 
+		echo $this->form->user_id;
+		?>
+<?php 
+$holidayDate = $this->form->holidaydate->getValue();
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Holiday',(!empty($this->data['holidayname']))?$this->data['holidayname']:"...",'Date',(!empty($holidayDate))?$this->form->holidaydate->getValue():"...");
+sapp_Helper::viewBody('nor','Description',(!empty($this->data['description']))?$this->data['description']:"...",'','');
+sapp_Helper::viewFooter();
+?>
+        <div class="new-form-ui-submit" id="formSubmit">
+        <input onclick="closeiframepopup('empholidays','cancel');" type="button" value="Close"  />
+        </div>

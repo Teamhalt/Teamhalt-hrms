@@ -1,0 +1,20 @@
+<?php 
+
+?>
+
+<?php  $options_data = "";
+   $options_data .= sapp_Global::selectOptionBuilder('', 'Select Category ');
+if(!empty($this->user_cat_data))
+{
+		foreach ($this->user_cat_data as $userdata) {
+			$options_data .= sapp_Global::selectOptionBuilder($userdata['id'],utf8_encode($userdata['name']));
+			
+		}
+		echo $options_data;
+	
+}else
+{
+  echo "nocategories";
+} 
+?> 
+ 

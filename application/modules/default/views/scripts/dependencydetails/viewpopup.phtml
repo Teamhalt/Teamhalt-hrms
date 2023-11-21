@@ -1,0 +1,21 @@
+<?php 
+
+?>
+
+<?php $baseUrl = $this->serverUrl().$this->baseUrl();
+sapp_Global::generateClientValidations($this->form);
+?>
+<div id="error_message" style="display:none;"></div>
+		<?php echo $this->form->id; ?>
+<?php 
+$dependentDob = $this->form->dependent_dob->getValue();
+sapp_Helper::viewHeader();
+sapp_Helper::viewBody('alt','Dependent Name',(!empty($this->data[0]['dependent_name']))?$this->data[0]['dependent_name']:"...",'Dependent Relation',(!empty($this->data[0]['dependent_relation']))?$this->data[0]['dependent_relation']:"...");
+sapp_Helper::viewBody('nor','Dependent Custody Code',(!empty($this->data[0]['dependent_custody']))?$this->data[0]['dependent_custody']:"...",'Dependent DOB ',(!empty($dependentDob))?$this->form->dependent_dob->getValue():"...");
+sapp_Helper::viewBody('alt','Dependent Age',(!empty($this->data[0]['dependent_age']))?$this->data[0]['dependent_age']:"...",'','');
+sapp_Helper::viewFooter();
+?>
+       
+        <div class="new-form-ui-submit" id="formSubmit">
+        <input onclick="closeiframepopup('dependencydetails','cancel');" type="button" value="Close"  />
+        </div>

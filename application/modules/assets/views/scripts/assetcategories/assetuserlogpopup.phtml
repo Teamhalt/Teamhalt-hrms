@@ -1,0 +1,42 @@
+<?php 
+$baseUrl = $this->serverUrl().$this->baseUrl();
+$assetuserlogdata = $this->assetuserlogdata;
+//echo "<pre>";print_r($assetuserlogdata);di
+?>
+<div class="total-form-controller view-form-detail">
+		
+		<div style="margin-left: 0px; padding-top: 0px; padding-bottom: 20px;  float: none;" class="cofig_title">Asset History
+			<div style="margin-top: 0px; float: right; width: auto;" class="new-form-ui-submit ">
+				<div style="position: relative; float: right; top: 0px;" class="back-to-page">
+					<input type="button" style="margin-right: 0px;" value="Back" name="Back" onclick="window.location.href='<?php echo BASE_URL; ?>assets/assetcategories';">
+				</div>
+				
+			</div>
+		 </div>
+		
+  
+      <?php 
+		 if(count($this->assetuserlogdata) > 0){
+		 	$i = 0;
+		 	?>   
+        <?php 
+		 	foreach($this->assetuserlogdata as $asset_user_log){
+    	  ?>
+    	
+    	  <p><?php echo $asset_user_log['createddate'];?> <?php echo $this->objName?> <b>Allocated To</b> -<?php echo $asset_user_log['userfullname'];?></p><br/>
+    	  <p>  ......................................................................................................................................................</p>
+         <?php }?> 
+		 <?php 
+		 $i++;
+ 		}	
+ 		?>
+         
+     
+			
+	</div>        
+      
+      
+      
+     
+				
+ 

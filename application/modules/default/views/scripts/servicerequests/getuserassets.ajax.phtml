@@ -1,0 +1,21 @@
+<?php 
+
+?>
+
+<?php  $options_data = "";
+   $options_data .= sapp_Global::selectOptionBuilder('', 'Select Asset Name ');
+if(!empty($this->user_allocated_cat))
+{
+				foreach ($this->user_allocated_cat as $userdata) {
+			$options_data .= sapp_Global::selectOptionBuilder($userdata['id'].'_'.$userdata['category'],utf8_encode($userdata['name']));
+			
+				}
+		echo $options_data;
+	
+}else
+{
+  echo "noassets";
+}
+
+?> 
+ 

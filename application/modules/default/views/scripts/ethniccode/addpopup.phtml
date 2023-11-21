@@ -1,0 +1,29 @@
+
+<?php if($this->popup == 'close') { ?>	
+	<div class="ml-alert-1-success">
+	<div class="style-1-icon success"></div>
+	Ethnic code <?php echo $this->eventact; ?> successfully
+	</div>
+
+	<?php } 
+else
+{	 sapp_Global::generateClientValidations($this->form);?>
+<div id="error_message" style="display:none;"></div>
+
+<?php	}	?>
+<script language='javascript'>
+
+	<?php if($this->popup != '') { ?>
+				closeiframeAddPopup("<?php echo $this->ethniccodesData ;?>",'<?php echo $this->controllername; ?>','ethniccodeid','Ethnic Code'); 
+	<?php } ?>
+	</script>
+<script type='text/javascript'>
+	$(document).ready(function() { 
+		<?php if (count($this->messages)) {?>
+			  setTimeout(function(){
+					$('#popupmessage').fadeOut('slow');
+				},3000);
+
+		<?php } ?>
+	});
+</script>
